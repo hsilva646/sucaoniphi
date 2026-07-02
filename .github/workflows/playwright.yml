@@ -22,12 +22,27 @@ jobs:
         run: npx playwright install --with-deps
       - name: Build
         run: npm run build
+      - name: List build output
+        run: ls -la ./dist || true
+      - name: Show Node and Playwright versions
+        run: |
+          node --version || true
+          npx playwright --version || true
       - name: Start static server (http-server)
         run: |
           npx http-server ./dist -p 3006 &
           npx wait-on http://localhost:3006
       - name: Smoke test server
         run: |
-          curl -I http://localhost:3006 || true
-      - name: Run Playwright tests
-        run: npx playwright test --reporter=list
+          curl -v http://localhost:3006 || true
+      - name: Run Playwright tests and capture logs
+        run: |
+          npx playwright test --reporter=list 2>&1 | tee playwright.log || true
+          echo "--- PLAYWRIGHT.LOG ---"
+          cat playwright.log || true
+          # Fail the job if playwright returned non-zero
+          EXIT_CODE=${PIPESTATUS[0]:-1}
+          if [ "$EXIT_CODE" -ne 0 ]; then
+            echo "Playwright exited with $EXIT_CODE"
+            exit $EXIT_CODE
+          fi
