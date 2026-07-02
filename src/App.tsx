@@ -10,6 +10,7 @@ import Preco from '@/pages/Preco';
 import Vendas from '@/pages/Vendas';
 import Relatorios from '@/pages/Relatorios';
 import seedData from '@/data/seedData';
+import { AppState } from '@/types';
 import { useStore } from '@/context/store';
 import { initializeDatabase, getAll, putAll } from '@/utils/db';
 
@@ -21,7 +22,7 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     // Import seed data on first run if store is empty
     if (store.products.length === 0 && store.supplies.length === 0) {
-      store.importData(seedData as any);
+      store.importData(seedData as AppState);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

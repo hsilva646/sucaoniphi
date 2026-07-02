@@ -11,7 +11,7 @@ interface Column<T> {
   label: string;
   sortable?: boolean;
   filterable?: boolean;
-  render?: (value: any, row: T) => React.ReactNode;
+  render?: (value: T[keyof T], row: T) => React.ReactNode;
   width?: string;
 }
 

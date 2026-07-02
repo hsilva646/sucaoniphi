@@ -265,8 +265,6 @@ const Vendas: React.FC = () => {
               </button>
               <button
                 onClick={() => {
-                  // confirmação antes de excluir
-                  // eslint-disable-next-line no-restricted-globals
                   if (confirm('Confirma exclusão desta venda?')) deleteSale(s.id);
                 }}
                 className="px-3 py-1 rounded bg-red-100 text-red-700"

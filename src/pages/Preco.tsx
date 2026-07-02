@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { calculateRealMargin, calculateSuggestedPrice, formatCurrency, convertUnitQuantity } from '@/utils/calculations';
+import { PriceSimulation } from '@/types';
 
 type Ingredient = { id: string; supplyId: string; quantity: number; unit?: string };
 type Flavor = { id: string; name: string; ingredients: Ingredient[]; packagingCost?: number; yield?: number };
@@ -38,7 +39,7 @@ const Preco: React.FC = () => {
       try {
         const data = await getAll<Recipe>('recipes');
         setRecipes(data || []);
-        if (!recipeId && data && data.length > 0) {
+        if (data && data.length > 0 && !recipeId) {
           setRecipeId(data[0].id);
         }
       } catch (error) {
@@ -47,7 +48,7 @@ const Preco: React.FC = () => {
     };
 
     loadRecipes();
-  }, []);
+  }, [recipeId]);
 
   const getSupplyUnitCost = (supplyId: string) => {
     const sup = supplies.find((s) => s.id === supplyId);
@@ -85,7 +86,7 @@ const Preco: React.FC = () => {
     const cost = allIngredients.reduce((sum, ing) => {
       const unitCost = getSupplyUnitCost(ing.supplyId);
       const supplyUnit = getSupplyUnit(ing.supplyId);
-      const ingredientUnit = (ing as any).unit || supplyUnit;
+      const ingredientUnit = ing.unit || supplyUnit;
       const convertedQuantity = convertIngredientQuantityToSupply(ing.quantity, ingredientUnit, supplyUnit);
       return sum + unitCost * convertedQuantity;
     }, 0);
@@ -100,7 +101,6 @@ const Preco: React.FC = () => {
 
   useEffect(() => {
     if (!selectedRecipe) {
-      setCostPerUnit(0);
       return;
     }
 
@@ -109,7 +109,7 @@ const Preco: React.FC = () => {
     const rawCostPerUnit = quantidadeProduzida > 0 ? costTotalRecipe / quantidadeProduzida : 0;
 
     setCostPerUnit(rawCostPerUnit);
-  }, [selectedRecipe, supplies]);
+  }, [selectedRecipe, supplies, calculateRecipeCost]);
 
   const desiredMarginDecimal = desiredMargin / 100;
   const taxesDecimal = taxesPercent / 100;
@@ -145,11 +145,11 @@ const Preco: React.FC = () => {
   const realMargin = calculateRealMargin(effectivePrice, totalCost);
   const markup = totalCost > 0 ? effectivePrice / totalCost : 1;
 
-  const status = useMemo(() => {
+  const status = (() => {
     if (realMargin < 0) return 'Prejuízo';
     if (realMargin < desiredMargin) return 'Atenção';
     return 'Saudável';
-  }, [realMargin, desiredMargin]);
+  })();
 
   const handleSaveSimulation = () => {
     if (!selectedRecipe) {
@@ -157,7 +157,7 @@ const Preco: React.FC = () => {
       return;
     }
 
-    const sim = {
+    const sim: PriceSimulation = {
       id: Date.now().toString(),
       productId: recipeId,
       price: Number(effectivePrice),
@@ -172,7 +172,7 @@ const Preco: React.FC = () => {
       timestamp: new Date().toISOString(),
     };
 
-    addSimulation(sim as any);
+    addSimulation(sim);
     setSaveMessage('Simulação salva com sucesso.');
   };
 

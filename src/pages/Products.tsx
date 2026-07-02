@@ -11,7 +11,9 @@ import { generateId, formatDate, formatCurrency } from '@/utils/calculations';
 import { Product } from '@/types';
 import { motion } from 'framer-motion';
 
-interface ProductsProps {}
+interface ProductsProps {
+  // Products component props
+}
 
 const Products: React.FC<ProductsProps> = () => {
   const { products, addProduct, updateProduct, deleteProduct, duplicateProduct } = useStore();
@@ -154,7 +156,10 @@ const Products: React.FC<ProductsProps> = () => {
       id: 'price',
       label: 'Preço Unit.',
       sortable: true,
-      render: (value) => value ? formatCurrency(value) : '—',
+      render: (value: unknown) => {
+        const numValue = typeof value === 'number' ? value : 0;
+        return numValue ? formatCurrency(numValue) : '—';
+      },
       width: '12%',
     },
     {
@@ -176,7 +181,10 @@ const Products: React.FC<ProductsProps> = () => {
       id: 'createdAt',
       label: 'Data Criação',
       sortable: true,
-      render: (value) => formatDate(value),
+      render: (value: unknown) => {
+        const dateValue = value instanceof Date ? value : (typeof value === 'string' ? value : new Date());
+        return formatDate(dateValue);
+      },
       width: '12%',
     },
   ];

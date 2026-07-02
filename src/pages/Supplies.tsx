@@ -141,8 +141,8 @@ const Supplies: React.FC = () => {
       id: 'quantityInStock',
       label: 'Status',
       render: (value, row: Supply) => (
-        <Badge variant={value <= row.minimumStock ? 'error' : 'success'}>
-          {value <= row.minimumStock ? 'Baixo' : 'OK'}
+        <Badge variant={(value as number) <= row.minimumStock ? 'error' : 'success'}>
+          {(value as number) <= row.minimumStock ? 'Baixo' : 'OK'}
         </Badge>
       ),
       width: '10%',
@@ -150,13 +150,13 @@ const Supplies: React.FC = () => {
     {
       id: 'price',
       label: 'Preço Pago',
-      render: (value) => formatCurrency(value),
+      render: (value: unknown) => formatCurrency(value as number),
       width: '15%',
     },
     {
       id: 'averagePrice',
       label: 'Custo Unit.',
-      render: (value) => formatCurrency(value || 0),
+      render: (value: unknown) => formatCurrency((value as number) || 0),
       width: '15%',
     },
   ];

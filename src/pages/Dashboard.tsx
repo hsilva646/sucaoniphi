@@ -92,11 +92,11 @@ const Dashboard: React.FC = () => {
   const COLORS = ['#0d7377', '#10b981', '#f59e0b'];
 
   const profitEvolution = useMemo(() => [
-    { month: 'Jan', profit: Math.random() * 10000, revenue: Math.random() * 25000 },
-    { month: 'Fev', profit: Math.random() * 12000, revenue: Math.random() * 30000 },
-    { month: 'Mar', profit: Math.random() * 15000, revenue: Math.random() * 35000 },
-    { month: 'Abr', profit: Math.random() * 18000, revenue: Math.random() * 40000 },
-    { month: 'Mai', profit: Math.random() * 20000, revenue: Math.random() * 45000 },
+    { month: 'Jan', profit: 5000, revenue: 12500 },
+    { month: 'Fev', profit: 6000, revenue: 15000 },
+    { month: 'Mar', profit: 7500, revenue: 17500 },
+    { month: 'Abr', profit: 9000, revenue: 20000 },
+    { month: 'Mai', profit: 10000, revenue: 22500 },
     { month: 'Jun', profit: metrics.totalProfit, revenue: metrics.totalRevenue },
   ], [metrics]);
 
