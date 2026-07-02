@@ -22,9 +22,12 @@ jobs:
         run: npx playwright install --with-deps
       - name: Build
         run: npm run build
-      - name: Start preview server
+      - name: Start static server (http-server)
         run: |
-          npm run preview -- --port 3006 &
+          npx http-server ./dist -p 3006 &
           npx wait-on http://localhost:3006
+      - name: Smoke test server
+        run: |
+          curl -I http://localhost:3006 || true
       - name: Run Playwright tests
         run: npx playwright test --reporter=list
