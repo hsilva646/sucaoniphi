@@ -46,3 +46,9 @@ jobs:
             echo "Playwright exited with $EXIT_CODE"
             exit $EXIT_CODE
           fi
+      - name: Upload Playwright logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-log
+          path: playwright.log
