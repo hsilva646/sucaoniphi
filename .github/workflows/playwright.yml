@@ -2,9 +2,9 @@ name: Playwright E2E Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, ci/playwright ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, ci/playwright ]
 
 jobs:
   test:
